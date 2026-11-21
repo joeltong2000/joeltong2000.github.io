@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Tesla OAuth callback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; }
+    code, textarea { font-family: ui-monospace, monospace; }
+    textarea { width: 100%; min-height: 6rem; }
+  </style>
+</head>
+<body>
+  <h1>Tesla sign-in callback</h1>
+  <p id="status">Reading the redirect…</p>
+  <p>Copy the authorization code (or the full URL) and paste it into the OAuth helper script. You can close this tab after that.</p>
+  <textarea id="out" readonly></textarea>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code");
+    const err = params.get("error") || params.get("error_description");
+    const status = document.getElementById("status");
+    const out = document.getElementById("out");
+    if (err) {
+      status.textContent = "Tesla returned an error.";
+      out.value = err + (params.get("error_description") ? "\n" + params.get("error_description") : "");
+    } else if (code) {
+      status.textContent = "Authorization code received. Paste this into the helper.";
+      out.value = code;
+    } else {
+      status.textContent = "No code was found in the URL. If Tesla redirected here, copy the address bar into the helper.";
+      out.value = location.href;
+    }
+    out.focus();
+    out.select();
+  </script>
+</body>
+</html>
